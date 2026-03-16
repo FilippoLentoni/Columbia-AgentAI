@@ -1,0 +1,196 @@
+% =======================
+% Section 2: Knowledge & Planning
+% =======================
+\section{Knowledge \& Planning}
+
+% ---- Slide 8a: RAG — Two-Phase Pipeline ----
+\begin{frame}{RAG: Retrieval-Augmented Generation}
+\textbf{Goal}: ground model outputs in external knowledge beyond the training cutoff\\[0.4em]
+RAG operates in \textbf{two distinct phases} with different parameters and different failure modes:
+\vspace{0.4em}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{block}{Phase 1 — Offline: Knowledge Base Preparation}
+\begin{enumerate}
+  \item Ingest documents
+  \item Chunk text \textit{(strategy, size, overlap)}
+  \item Compute embeddings \textit{(model choice)}
+  \item Store in vector index \textit{(distance metric)}
+\end{enumerate}
+\vspace{0.2em}
+\scriptsize Decisions made \emph{once}. Heavily influence downstream retrieval quality.
+\end{block}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{block}{Phase 2 — Online: Retrieval \& Generation}
+\begin{enumerate}
+  \item Embed user query
+  \item Retrieve top-$k$ chunks \textit{(k, threshold, reranking)}
+  \item Filter by metadata if needed
+  \item Inject context into prompt
+  \item Generate grounded answer \textit{(system prompt, model)}
+\end{enumerate}
+\end{block}
+\end{column}
+\end{columns}
+\vspace{0.4em}
+\small \textit{RAG is not one pipeline — it is two pipelines with different owners, timelines, and tuning levers.\\
+RAG alone is insufficient when knowledge must be synthesized across many documents or acted upon — that is where agents come in.}
+% Speaker notes:
+% Offline = data engineering problem; online = runtime problem.
+% Different teams often own each phase in production.
+\end{frame}
+
+% ---- Slide 8b: RAG Parameters ----
+\begin{frame}{RAG Parameters}
+\small
+\begin{tabular}{llll}
+\toprule
+\textbf{Phase} & \textbf{Parameter} & \textbf{What it controls} & \textbf{This Project} \\
+\midrule
+\multirow{4}{*}{\textbf{Offline}}
+  & Chunking strategy & How text is split (fixed, semantic, hierarchical) & Fixed-size \\
+  & Chunk size        & Amount of context per chunk                       & 512 tokens \\
+  & Chunk overlap     & Context preserved across boundaries               & 20\% \\
+  & Embedding model   & How text is converted to vectors                  & Titan Embed v2 \\
+\midrule
+\multirow{5}{*}{\textbf{Online}}
+  & Number of results & Chunks returned per search (top-$k$)              & 5 \\
+  & Distance metric   & How vectors are compared                          & Cosine \\
+  & Reranking         & Cross-encoder rescoring of top-$k$ results        & None \\
+  & Metadata filters  & Narrowing search by document or category          & None \\
+  & Query formulation & How search queries are constructed                & Model-driven \\
+\midrule
+\multirow{2}{*}{\textbf{Generation}}
+  & System prompt     & Reasoning instructions, output format             & Custom \\
+  & Model             & LLM that generates the answer                     & Claude Sonnet 4.5 \\
+\bottomrule
+\end{tabular}
+\vspace{0.4em}
+
+\small \textit{There is no universally correct configuration — parameter choices depend on domain, document type, and task. Reranking is listed even though unused here: its absence is itself a design choice.}
+% Speaker notes:
+% Walk through each phase group.
+% "This Project" column makes concepts concrete.
+% Connect each parameter to a real trade-off.
+\end{frame}
+
+% ---- Slide 8c: RAG — What Can Go Wrong ----
+\begin{frame}{RAG: What Can Go Wrong}
+Each parameter is a failure mode waiting to happen:
+\vspace{0.3em}
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+\textbf{Phase} & \textbf{Bad parameter choice} & \textbf{Failure mode} \\
+\midrule
+Offline & Chunk size too small          & Loss of context; incoherent retrieval \\
+Offline & No chunk overlap              & Answers split across chunk boundaries \\
+Offline & Weak embedding model          & Semantically irrelevant chunks retrieved \\
+\midrule
+Online  & $k$ too low                   & Relevant content not in context \\
+Online  & No reranking                  & Top-$k$ by vector similarity $\neq$ top-$k$ by relevance \\
+Online  & No metadata filters           & Noise from unrelated documents \\
+Online  & Poor query formulation        & Retrieval misses the user's intent \\
+\midrule
+Generation & Weak system prompt         & Inconsistent format; hallucinated synthesis \\
+Generation & Model ignores context      & Generates from parametric memory, not retrieved chunks \\
+\bottomrule
+\end{tabular}
+\end{center}
+\vspace{0.3em}
+\small \textit{``Stale or irrelevant retrieval'' is one of the most common agent failure modes — it starts here.}
+% Speaker notes:
+% This table is the payoff: students remember parameters when they understand what breaks.
+% Connect to failure modes appendix.
+\end{frame}
+
+% ---- Slide 9: Mental Model — Plan Creation then Execution ----
+\begin{frame}{My Mental Model: Agents for Plan Creation, Then Execution}
+\begin{columns}[T]
+\begin{column}{0.52\textwidth}
+A practical framing for when to use agents:
+\begin{enumerate}
+  \item Use an agent to \textbf{create or refine a plan} when the solution path is uncertain
+  \item Then \textbf{execute} using either deterministic code or another agent
+\end{enumerate}
+\vspace{0.4em}
+\begin{itemize}
+  \item Helps decide whether an agent is actually needed
+  \item The boundary is often a gray area
+\end{itemize}
+\vspace{0.4em}
+\textit{``Agents are especially useful when the path to the solution is uncertain, not just when the final answer is hard.''}
+\end{column}
+\begin{column}{0.44\textwidth}
+\begin{tikzpicture}[
+  box/.style={draw, rounded corners=4pt, minimum width=3.0cm,
+              minimum height=0.6cm, align=center, font=\small},
+  every node/.style={font=\small}
+]
+  \node[box, fill=red!10]    (prob) at (0,3.4) {Uncertain Problem};
+  \node[box, fill=orange!15] (plan) at (0,2.4) {Agent creates / refines plan};
+  \node[box, fill=blue!10]   (exec) at (0,1.4) {Execution layer};
+  \node[box, fill=green!15, minimum width=1.3cm] (det) at (-0.85,0.4) {\scriptsize Deterministic\\\scriptsize Software};
+  \node[box, fill=yellow!20, minimum width=1.3cm] (rt)  at ( 0.85,0.4) {\scriptsize Runtime\\\scriptsize Agent};
+  \draw[-{Stealth}] (prob) -- (plan);
+  \draw[-{Stealth}] (plan) -- (exec);
+  \draw[-{Stealth}] (exec) -- (det);
+  \draw[-{Stealth}] (exec) -- (rt);
+\end{tikzpicture}
+\end{column}
+\end{columns}
+% Speaker notes:
+% Examples: "I don't know the schema" → agent discovers.
+% "I don't know where info lives" → agent searches.
+% Sometimes the best use of an agent is to produce deterministic software.
+\end{frame}
+
+% ---- Slide 10: Deterministic Code vs Runtime Agent ----
+\begin{frame}{Deterministic Code vs.\ Runtime Agent}
+After planning, execution can follow different paths:
+\vspace{0.4em}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{block}{Case 1 — Deterministic Execution}
+\begin{itemize}
+  \item Plan is well specified
+  \item Environment is stable
+  \item Limited unforeseen events
+  \item Output: scripts, workflows, decision trees
+\end{itemize}
+\end{block}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{block}{Case 2 — Runtime Agentic Execution}
+\begin{itemize}
+  \item Plan remains high-level
+  \item Environment is dynamic / non-stationary
+  \item System must adapt step by step
+  \item Output: ongoing reasoning + actions
+\end{itemize}
+\end{block}
+\end{column}
+\end{columns}
+\vspace{0.5em}
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+\textbf{Dimension}   & \textbf{Deterministic code} & \textbf{Runtime agent} \\
+\midrule
+Plan specificity     & High              & Medium / Low \\
+Environment          & Stable            & Dynamic \\
+Adaptation needed    & Low               & High \\
+Cost / latency       & Low, predictable  & Higher, variable \\
+Debuggability        & Easy              & Harder \\
+\bottomrule
+\end{tabular}
+\end{center}
+\vspace{0.3em}
+\textit{``Use software where behavior should be fixed. Use runtime agents where behavior must adapt.''}
+% Speaker notes:
+% Not every problem should stay agentic at runtime.
+% Sometimes the best use of an agent is to produce deterministic software.
+\end{frame}

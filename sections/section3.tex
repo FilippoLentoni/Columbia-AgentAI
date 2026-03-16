@@ -1,0 +1,47 @@
+% =======================
+% Section 3: Ecosystem
+% =======================
+\section{Ecosystem}
+
+% ---- Slide 11: Ecosystem Overview ----
+\begin{frame}{Ecosystem Overview}
+Raw LLM APIs are stateless and have no orchestration — the ecosystem exists to solve that:
+\vspace{0.4em}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{block}{Interoperability}
+\begin{itemize}
+  \item \textbf{MCP} (Model Context Protocol) — open standard for tool discovery and invocation; tools built once work across any MCP-compatible agent or framework
+\end{itemize}
+\end{block}
+\vspace{0.3em}
+\begin{block}{Orchestration}
+\begin{itemize}
+  \item \textbf{LangChain / LangGraph} — application abstractions for single-agent flows; LangGraph adds stateful, graph-based multi-step orchestration
+  \item \textbf{CrewAI} — multi-agent role-based orchestration and collaboration
+\end{itemize}
+\end{block}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{block}{Development SDK}
+\begin{itemize}
+  \item \textbf{Strands Agents} — model-first agent development; keeps the agent loop explicit and close to the developer
+\end{itemize}
+\end{block}
+\vspace{0.3em}
+\begin{block}{Production Runtime}
+\begin{itemize}
+  \item \textbf{AgentCore} — secure runtime, memory management, tool gateway, and production operations; the deployment layer for cloud-hosted agents
+\end{itemize}
+\end{block}
+\end{column}
+\end{columns}
+\vspace{0.3em}
+\small \textit{MCP sits orthogonally to orchestration frameworks — it is the connective tissue, not a competing tool. Reach for each layer when its problem arises, not before.}
+% Speaker notes:
+% MCP → when tools need to be portable across agents or frameworks
+% LangChain/LangGraph → when you need single/multi-step orchestration
+% CrewAI → when you need multiple specialized agents collaborating
+% Strands → when you want to stay close to the model and keep the loop explicit
+% AgentCore → when you need to deploy, govern, and operate in production on AWS
+\end{frame}

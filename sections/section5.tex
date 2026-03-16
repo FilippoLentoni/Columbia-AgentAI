@@ -1,0 +1,76 @@
+% =======================
+% Section 5: Demo
+% =======================
+\section{Demo}
+
+% ---- Slide 15: Transition to the Notebook Demo ----
+\begin{frame}{Transition to the Notebook Demo}
+\begin{columns}[T]
+\begin{column}{0.52\textwidth}
+\textbf{Next:} build a simple agent in AWS\\[0.6em]
+Goals of the demo:
+\begin{itemize}
+  \item Define tools (and expose via MCP)
+  \item Configure the model
+  \item Create the agent
+  \item Interact with it
+\end{itemize}
+\vspace{0.6em}
+Focus: making the abstractions \textbf{concrete}\\[0.4em]
+\textit{``Now that we have the conceptual map, we move to a practical implementation.''}
+\end{column}
+\begin{column}{0.44\textwidth}
+\begin{tikzpicture}[
+  box/.style={draw, rounded corners=4pt, minimum width=3.0cm,
+              minimum height=0.7cm, align=center, font=\small},
+  every node/.style={font=\small}
+]
+  \node[box, fill=blue!12]  (concept) at (0,1.6) {Concepts};
+  \node[box, fill=green!20] (impl)    at (0,0.4) {Implementation};
+  \draw[-{Stealth}, very thick] (concept) -- (impl);
+\end{tikzpicture}
+\end{column}
+\end{columns}
+% Speaker notes:
+% The notebook is intentionally simpler than the full theory stack.
+% Not every production concern will be implemented live,
+% but students will see the essential agent loop.
+\end{frame}
+
+% =======================
+% Appendix
+% =======================
+\appendix
+
+\begin{frame}{Appendix A — Memory Types}
+\begin{itemize}
+  \item \textbf{Working / context memory} — current prompt and conversation window; ephemeral
+  \item \textbf{Short-term / session memory} — state maintained across turns within a session
+  \item \textbf{Long-term / persistent memory} — durable storage across sessions (external store)
+\end{itemize}
+\vspace{0.4em}
+\small \textit{Memory captures what the agent experienced. The knowledge base captures what exists in the domain. Both feed into the context window at inference time — they are complementary, not alternatives.}
+\end{frame}
+
+\begin{frame}{Appendix B — Failure Modes of Agents}
+\begin{itemize}
+  \item \textbf{Hallucination} — confident but incorrect outputs
+  \item \textbf{Wrong tool selection} — choosing an inappropriate tool for a task
+  \item \textbf{Looping} — repeating the same steps without progress
+  \item \textbf{Stale retrieval} — outdated or irrelevant chunks returned by RAG
+  \item \textbf{Prompt injection} — malicious instructions embedded in retrieved content or tool outputs hijack the agent
+  \item \textbf{Permission leakage} — agent accesses data or tools beyond its authorization
+  \item \textbf{Excessive cost / latency} — runaway token usage or slow chains; the growing context window is a key structural driver
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Appendix C — Alternative Agent Execution Patterns}
+\begin{itemize}
+  \item \textbf{ReAct} — Thought $\to$ Act $\to$ Observe loop; grounded in real-world feedback at each step
+  \item \textbf{ReWOO} — plans all tool calls upfront without an observation loop; more efficient but less adaptive
+  \item \textbf{Reflexion} — adds iterative self-reflection; agent identifies errors and revises strategy
+  \item \textbf{LATS} (Language Agent Tree Search) — builds a decision tree over possible actions using Monte Carlo search + self-reflection; excels at complex coding and QA tasks
+\end{itemize}
+\vspace{0.4em}
+\small All of these are single-agent execution patterns. They operate at a different level from orchestration architecture (single-agent vs.\ multi-agent system design).
+\end{frame}
