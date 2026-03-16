@@ -9,3 +9,4 @@ build/
 *.synctex.gz
 *.toc
 *.pdf
+!presentation.pdf
