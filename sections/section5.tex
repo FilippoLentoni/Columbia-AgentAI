@@ -1,76 +1,212 @@
-% =======================
-% Section 5: Demo
-% =======================
-\section{Demo}
+% ---- Section 6: End-to-End Illustrative Example ----
+\section{End-to-End Example}
 
-% ---- Slide 15: Transition to the Notebook Demo ----
-\begin{frame}{Transition to the Notebook Demo}
-\begin{columns}[T]
-\begin{column}{0.52\textwidth}
-\textbf{Next:} build a simple agent in AWS\\[0.6em]
-Goals of the demo:
+% --- Slide 1: Problem Framing ---
+\begin{frame}{E2E Example: Inventory Optimization}
+
+\textbf{Context:} A retailer operates dozens of warehouses. A mathematical optimization model allocates inventory across locations weekly.\\[0.5em]
+
+\textbf{The challenge:}
 \begin{itemize}
-  \item Define tools (and expose via MCP)
-  \item Configure the model
-  \item Create the agent
-  \item Interact with it
+  \item Planners need to \textbf{understand} why inventory distributions changed
+  \item They must \textbf{assess} whether the model output is trustworthy given real-world events (port closures, demand surges, supplier delays)
+  \item They need to \textbf{decide} whether to apply bias corrections or edge adjustments to the model output
+  \item Information is spread across \textbf{databases}, \textbf{codebases}, and \textbf{domain documentation}
 \end{itemize}
-\vspace{0.6em}
-Focus: making the abstractions \textbf{concrete}\\[0.4em]
-\textit{``Now that we have the conceptual map, we move to a practical implementation.''}
-\end{column}
-\begin{column}{0.44\textwidth}
+
+\vspace{0.5em}
+\begin{block}{Two-Step Agentic Approach}
+\begin{enumerate}
+  \item \textbf{Agentic Chatbot} --- interactive copilot with limited tools; planner drives the analysis
+  \item \textbf{Autonomous Agentic Workflow} --- continuously monitors, adapts, and executes; agent drives the process
+\end{enumerate}
+\end{block}
+
+\vspace{0.3em}
+\small\textit{The path to the answer is uncertain, knowledge is spread across heterogeneous sources, and the analysis requires reasoning --- this is when agents add value.}
+
+\end{frame}
+
+% --- Slide 2: Step 1 — Agentic Chatbot ---
+\begin{frame}{Step 1: Agentic Chatbot}
+\centering
 \begin{tikzpicture}[
-  box/.style={draw, rounded corners=4pt, minimum width=3.0cm,
-              minimum height=0.7cm, align=center, font=\small},
-  every node/.style={font=\small}
+  agent/.style={draw, rounded corners=5pt, fill=blue!15,
+                minimum width=3.2cm, minimum height=0.8cm,
+                align=center, font=\small\bfseries},
+  tool/.style={draw, rounded corners=3pt, fill=green!12,
+               minimum width=2.2cm, minimum height=0.6cm,
+               align=center, font=\tiny},
+  data/.style={draw, rounded corners=3pt, fill=orange!12,
+               minimum width=2.2cm, minimum height=0.6cm,
+               align=center, font=\tiny},
+  usr/.style={draw, rounded corners=3pt, fill=gray!15,
+              minimum width=1.6cm, minimum height=0.6cm,
+              align=center, font=\tiny\bfseries},
+  sim/.style={draw, rounded corners=3pt, fill=yellow!15,
+              minimum width=2.0cm, minimum height=0.6cm,
+              align=center, font=\tiny},
+  lbl/.style={font=\tiny, text=gray},
+  arr/.style={-{Stealth}, thick}
 ]
-  \node[box, fill=blue!12]  (concept) at (0,1.6) {Concepts};
-  \node[box, fill=green!20] (impl)    at (0,0.4) {Implementation};
-  \draw[-{Stealth}, very thick] (concept) -- (impl);
+
+  % Planner
+  \node[usr] (planner) at (-4.5, 1.8) {Planner};
+
+  % Agent
+  \node[agent] (agent) at (-0.5, 1.8) {Supply Chain\\Chatbot Agent};
+  \node[draw, rounded corners=2pt, fill=blue!25,
+        minimum width=1.2cm, minimum height=0.35cm,
+        font=\tiny\bfseries] (llm) at (-0.5, 1.0) {LLM + ReAct};
+
+  % Planner <-> Agent
+  \draw[arr] (planner) -- (agent)
+    node[midway, above, font=\tiny] {NL query};
+  \draw[arr, dashed] (agent) -- (planner)
+    node[midway, below, font=\tiny] {answer};
+
+  % Tools
+  \node[tool] (sqltool) at (-3.0, -0.1) {SQL Query\\Tool};
+  \node[tool] (ragtool) at (-0.5, -0.1) {RAG\\Tool};
+  \node[tool] (codetool) at (2.0, -0.1) {Code Reader\\Tool};
+
+  % Data sources
+  \node[data] (db) at (-3.0, -1.2) {Database};
+  \node[data] (kb) at (-0.5, -1.2) {Knowledge Base};
+  \node[data] (code) at (2.0, -1.2) {Codebase};
+
+  % Simulation
+  \node[sim] (sim) at (4.2, 0.9) {Simulation\\Engine};
+
+  % LLM -> Tools
+  \draw[arr] (llm) -- (sqltool);
+  \draw[arr] (llm) -- (ragtool);
+  \draw[arr] (llm) -- (codetool);
+
+  % Tools -> Data
+  \draw[arr] (sqltool) -- (db);
+  \draw[arr] (ragtool) -- (kb);
+  \draw[arr] (codetool) -- (code);
+
+  % Agent -> Simulation
+  \draw[arr] (agent.east) -- (sim.west)
+    node[midway, above, font=\tiny] {what-if};
+
+  % Data labels
+  \node[lbl] at (-3.0, -1.7) {input data, allocations};
+  \node[lbl] at (-0.5, -1.7) {domain terms, rules};
+  \node[lbl] at (2.0, -1.7) {math models, solver};
+
+  % Workflow annotation
+  \node[draw, dashed, rounded corners=3pt, fill=yellow!8,
+        text width=4.5cm, align=center, font=\tiny]
+    at (4.2, -0.7) {Planner: ``Why did warehouse 7\\allocation drop 30\%?''\\Agent reasons across all sources\\$\rightarrow$ \textbf{Human decides and acts}};
+
 \end{tikzpicture}
-\end{column}
-\end{columns}
-% Speaker notes:
-% The notebook is intentionally simpler than the full theory stack.
-% Not every production concern will be implemented live,
-% but students will see the essential agent loop.
 \end{frame}
 
-% =======================
-% Appendix
-% =======================
-\appendix
+% --- Slide 3: Step 2 — Autonomous Agentic Workflow ---
+\begin{frame}{Step 2: Autonomous Agentic Workflow}
+\centering
+\begin{tikzpicture}[
+  agent/.style={draw, rounded corners=5pt, fill=red!15,
+                minimum width=3.2cm, minimum height=0.8cm,
+                align=center, font=\small\bfseries},
+  tool/.style={draw, rounded corners=3pt, fill=green!12,
+               minimum width=2.0cm, minimum height=0.55cm,
+               align=center, font=\tiny},
+  ext/.style={draw, rounded corners=3pt, fill=orange!12,
+              minimum width=2.0cm, minimum height=0.55cm,
+              align=center, font=\tiny},
+  act/.style={draw, rounded corners=3pt, fill=yellow!15,
+              minimum width=2.0cm, minimum height=0.55cm,
+              align=center, font=\tiny},
+  gate/.style={draw, dashed, rounded corners=3pt, fill=yellow!8,
+               minimum width=2.0cm, minimum height=0.55cm,
+               align=center, font=\tiny},
+  arr/.style={-{Stealth}, thick},
+  lbl/.style={font=\tiny, text=gray}
+]
 
-\begin{frame}{Appendix A — Memory Types}
-\begin{itemize}
-  \item \textbf{Working / context memory} — current prompt and conversation window; ephemeral
-  \item \textbf{Short-term / session memory} — state maintained across turns within a session
-  \item \textbf{Long-term / persistent memory} — durable storage across sessions (external store)
-\end{itemize}
-\vspace{0.4em}
-\small \textit{Memory captures what the agent experienced. The knowledge base captures what exists in the domain. Both feed into the context window at inference time — they are complementary, not alternatives.}
+  % Autonomous Agent (center)
+  \node[agent] (agent) at (0, 2.5) {Autonomous\\Planning Agent};
+  \node[draw, rounded corners=2pt, fill=red!25,
+        minimum width=1.6cm, minimum height=0.35cm,
+        font=\tiny\bfseries] (llm) at (0, 1.75) {LLM + Planning + Memory};
+
+  % Left: Inputs / Monitoring
+  \node[ext] (world) at (-4.0, 2.8) {Real-World Events};
+  \node[ext] (feeds) at (-4.0, 2.1) {Supplier Feeds};
+  \node[ext] (news) at (-4.0, 1.4) {News \& Disruptions};
+  \node[ext] (lit) at (-4.0, 0.7) {OR Literature};
+
+  \draw[arr] (world.east) -- (agent.west);
+  \draw[arr] (feeds.east) -- (agent.west);
+  \draw[arr] (news.east) -- (agent.west);
+  \draw[arr] (lit.east) -- (llm.west);
+
+  % Right: Actions / Outputs
+  \node[act] (email) at (4.0, 2.8) {Email Leadership};
+  \node[act] (modify) at (4.0, 2.1) {Modify Opt.\ Code};
+  \node[act] (simulate) at (4.0, 1.4) {Run Simulations};
+  \node[act] (bias) at (4.0, 0.7) {Apply Bias Corrections};
+
+  \draw[arr] (agent.east) -- (email.west);
+  \draw[arr] (agent.east) -- (modify.west);
+  \draw[arr] (agent.east) -- (simulate.west);
+  \draw[arr] (llm.east) -- (bias.west);
+
+  % Bottom: Existing tools (carried over from Step 1)
+  \node[tool] (sqltool) at (-2.0, -0.1) {SQL Tool};
+  \node[tool] (ragtool) at (0, -0.1) {RAG Tool};
+  \node[tool] (codetool) at (2.0, -0.1) {Code R/W Tool};
+
+  \draw[arr] (llm) -- (sqltool);
+  \draw[arr] (llm) -- (ragtool);
+  \draw[arr] (llm) -- (codetool);
+
+  % Approval gate
+  \node[gate] (gate) at (4.0, 0.0) {Approval Gates\\(high-risk actions)};
+  \draw[arr, dashed, red!50] (modify.south) -- (gate.north);
+  \draw[arr, dashed, red!50] (bias.south) -- (gate.north);
+
+  % Bottom annotation
+  \node[draw, rounded corners=3pt, fill=blue!5,
+        text width=8cm, align=center, font=\tiny]
+    at (0, -1.1) {As the world evolves, we need technology that \textbf{interprets changes},
+    \textbf{adapts models}, and \textbf{executes the planning process} ---
+    continuously and proactively.};
+
+\end{tikzpicture}
 \end{frame}
 
-\begin{frame}{Appendix B — Failure Modes of Agents}
-\begin{itemize}
-  \item \textbf{Hallucination} — confident but incorrect outputs
-  \item \textbf{Wrong tool selection} — choosing an inappropriate tool for a task
-  \item \textbf{Looping} — repeating the same steps without progress
-  \item \textbf{Stale retrieval} — outdated or irrelevant chunks returned by RAG
-  \item \textbf{Prompt injection} — malicious instructions embedded in retrieved content or tool outputs hijack the agent
-  \item \textbf{Permission leakage} — agent accesses data or tools beyond its authorization
-  \item \textbf{Excessive cost / latency} — runaway token usage or slow chains; the growing context window is a key structural driver
-\end{itemize}
-\end{frame}
+% % --- Slide 4: Comparison — What Changes ---
+% \begin{frame}{From Chatbot to Autonomous: What Changes}
 
-\begin{frame}{Appendix C — Alternative Agent Execution Patterns}
-\begin{itemize}
-  \item \textbf{ReAct} — Thought $\to$ Act $\to$ Observe loop; grounded in real-world feedback at each step
-  \item \textbf{ReWOO} — plans all tool calls upfront without an observation loop; more efficient but less adaptive
-  \item \textbf{Reflexion} — adds iterative self-reflection; agent identifies errors and revises strategy
-  \item \textbf{LATS} (Language Agent Tree Search) — builds a decision tree over possible actions using Monte Carlo search + self-reflection; excels at complex coding and QA tasks
-\end{itemize}
-\vspace{0.4em}
-\small All of these are single-agent execution patterns. They operate at a different level from orchestration architecture (single-agent vs.\ multi-agent system design).
-\end{frame}
+% \small
+% \renewcommand{\arraystretch}{1.3}
+% \begin{tabular}{p{1.5cm} p{4.2cm} p{4.2cm}}
+% \toprule
+% \textbf{Layer} & \textbf{Step 1: Agentic Chatbot} & \textbf{Step 2: Autonomous Workflow} \\
+% \midrule
+% \textbf{Cognitive} &
+%   LLM reasons over retrieved data and code \textbf{on demand} &
+%   LLM plans autonomously, monitors and adapts \textbf{continuously} \\
+% \textbf{Action} &
+%   SQL tool, RAG tool, Code reader, Simulation engine &
+%   + Email tool, Code \textit{write} tool, Web search, Scheduler, OR literature search \\
+% \textbf{Memory} &
+%   Session memory only (within conversation) &
+%   Long-term memory: tracks disruptions, past decisions, model versions \\
+% \textbf{Safety} &
+%   Human-in-the-loop (planner decides) &
+%   Guardrails on code changes, approval gates for execution, audit trail \\
+% \bottomrule
+% \end{tabular}
+
+% \vspace{0.6em}
+% \begin{block}{Key Insight}
+% The evolution from chatbot to autonomous agent is not just about adding capabilities --- it requires expanding \textbf{every layer} of the agent anatomy: more tools, persistent memory, and stronger safety controls. The chatbot is the foundation; \textbf{trust and guardrails} enable the autonomous evolution.
+% \end{block}
+
+% \end{frame}

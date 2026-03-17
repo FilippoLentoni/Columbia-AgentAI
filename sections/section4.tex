@@ -1,154 +1,49 @@
 % =======================
-% Section 4: Coding Agents
+% Section 4: When to Use Agentic AI
 % =======================
-\section{Coding Agents}
+\section{When to Use Agentic AI}
 
-% ---- Slide 12: Coding Agents ----
-\begin{frame}{Coding Agents and Long-Horizon Autonomous Agents}
-\begin{itemize}
-  \item \textbf{Why code is a good domain for agents:}
-  \begin{itemize}
-    \item The environment is structured and well-defined
-    \item Tools are explicit: shell, file system, test runner
-    \item Success is verifiable — tests pass or fail
-    \item Iteration is natural — write, run, observe, fix
-  \end{itemize}
-  \vspace{0.3em}
-  \item Current examples: \textbf{Codex CLI} (OpenAI), \textbf{Claude Code} (Anthropic)
-  \item For longer-horizon autonomy: \textbf{OpenClaw} illustrates the direction toward persistent autonomous agents
-\end{itemize}
-\vspace{0.4em}
-\textbf{A spectrum of autonomy:}
-\vspace{0.3em}
-\begin{center}
-\begin{tikzpicture}[
-  box/.style={draw, rounded corners=3pt, fill=blue!10,
-              minimum width=2.5cm, minimum height=0.6cm,
-              align=center, font=\scriptsize},
-  every node/.style={font=\scriptsize}
-]
-  \node[box]                         (a1) at (0,0)   {Assistant};
-  \node[box, fill=blue!18]           (a2) at (2.7,0) {Tool-using\\[-2pt]Agent};
-  \node[box, fill=orange!18]         (a3) at (5.4,0) {Coding\\[-2pt]Agent};
-  \node[box, fill=red!12, text width=2.2cm] (a4) at (8.1,0) {Long-horizon\\[-2pt]Autonomous};
-  \draw[-{Stealth}] (a1) -- (a2);
-  \draw[-{Stealth}] (a2) -- (a3);
-  \draw[-{Stealth}] (a3) -- (a4);
-\end{tikzpicture}
-\end{center}
-% Speaker notes:
-% Verifiability is key: agents work well when "did it work?" has a clear answer.
-% That's why code, math, and data pipelines are natural agent domains.
-% Reliability, security, and oversight remain major challenges at the long-horizon end.
-\end{frame}
+% ---- Slide: Strategy Creation, Strategy Execution ----
+\begin{frame}{When to use Agents: Strategy Creation, Strategy Execution}
 
-% ---- Slide 13: Codex — The Harness and Prompt Assembly ----
-\begin{frame}{Codex: The Harness and Prompt Assembly}
-\begin{columns}[T]
-\begin{column}{0.52\textwidth}
-\textbf{Key insight}: Codex separates the \emph{model} from the \emph{harness}
-\begin{itemize}
-  \item The \textbf{harness} is the orchestration layer that assembles prompts, drives the loop, executes tools, and manages state
-  \item ``LLM + tools'' elides exactly this layer — the harness is the agent
-\end{itemize}
-\vspace{0.3em}
-\textbf{Prompt assembly is dynamic} — the prompt the user thinks they send is not what the model sees. The harness assembles it in layers:
+A practical framing for when to use agents:
 \begin{enumerate}
-  \item System instructions \textit{(model-specific, bundled in CLI)}
-  \item Sandbox / permissions context
-  \item Developer instructions
-  \item User instructions \textit{(from \texttt{AGENTS.md} files / skills)}
-  \item Environment context \textit{(cwd, shell)}
-  \item User message
+  \item Given a problem, agents are used to \textbf{create or refine a plan/strategy} when the solution path is uncertain and it requires skills/knowledge tools we do not have, or the knowledge is spread across different data sources and data types. The agent can navigate the information available, spread across different data sources and types, and leverage the FM to connect the docs and answer the user.
+  \item Then \textbf{execute} using either deterministic code --- eventually generated with the coding agent --- or an agentic solution
 \end{enumerate}
-\vspace{0.2em}
-\small Native tools, Responses API tools, and MCP tools all appear \emph{identical} to the model in the tools array.
-\end{column}
-\begin{column}{0.44\textwidth}
-\begin{tikzpicture}[
-  box/.style={draw, rounded corners=3pt, fill=blue!10,
-              minimum width=3.0cm, minimum height=0.55cm,
-              align=center, font=\scriptsize},
-  every node/.style={font=\scriptsize}
-]
-  \node[box, fill=gray!12]   (sys)  at (0, 4.2) {1. System instructions};
-  \node[box, fill=red!10]    (sand) at (0, 3.55) {2. Sandbox / permissions};
-  \node[box, fill=orange!12] (dev)  at (0, 2.9) {3. Developer instructions};
-  \node[box, fill=yellow!15] (agmd) at (0, 2.25) {4. AGENTS.md / skills};
-  \node[box, fill=blue!12]   (env)  at (0, 1.6) {5. Environment context};
-  \node[box, fill=green!15]  (usr)  at (0, 0.95) {6. User message};
-  \node[box, fill=purple!15] (inf)  at (0, 0.2) {Model inference};
+\textit{``Agents are especially useful when the path to the solution is uncertain, not just when the final answer is hard.''}
 
-  \draw[-{Stealth}] (sys)  -- (sand);
-  \draw[-{Stealth}] (sand) -- (dev);
-  \draw[-{Stealth}] (dev)  -- (agmd);
-  \draw[-{Stealth}] (agmd) -- (env);
-  \draw[-{Stealth}] (env)  -- (usr);
-  \draw[-{Stealth}] (usr)  -- (inf);
-
-  \draw[dashed, gray, rounded corners=3pt]
-    (-1.62, 4.5) rectangle (1.62, 0.6);
-  \node[font=\scriptsize\bfseries, text=gray] at (0, 4.72) {Harness assembles};
-\end{tikzpicture}
-\end{column}
-\end{columns}
-% Speaker notes:
-% Connect to Slide 2 (Anatomy): the harness IS the control + action + state layers made concrete.
-% Skills appear here as AGENTS.md / skill files — this is the Codex instantiation of the concept.
-% MCP safety reminder: MCP tools are NOT sandboxed by Codex.
 \end{frame}
 
-% ---- Slide 14: Codex — Managing the Growing Context ----
-\begin{frame}{Codex: Managing the Growing Context}
+
+% ---- Slide: Deterministic Code vs Runtime Agent ----
+\begin{frame}{Deterministic Code vs.\ Runtime Agent}
+After planning, execution can follow different paths:
+\vspace{0.4em}
 \begin{columns}[T]
-\begin{column}{0.52\textwidth}
-\textbf{The prompt grows monotonically:}
+\begin{column}{0.48\textwidth}
+\begin{block}{Case 1 — Deterministic Execution}
 \begin{itemize}
-  \item Each turn appends to prior input — full conversation history always included
-  \item A single turn can contain many iterations of inference + tool calls
-  \item A turn ends only when the model emits an \emph{assistant message} (termination signal)
-  \item This is \textbf{quadratic} in data sent — a real engineering problem
+  \item Plan is well specified
+  \item Environment is stable
+  \item Limited unforeseen events
+  \item Output: scripts, workflows, decision trees
+  \item Use the coding agent to automate the workflow
 \end{itemize}
-\vspace{0.3em}
-\textbf{Two mitigations:}
-\begin{itemize}
-  \item \textbf{Prompt caching} — reuse computation from prior inference if the prefix is stable. Static content (instructions, tools) must come first; variable content last. \textit{Cache miss}: MCP tools enumerated in inconsistent order $\to$ expensive miss every turn.
-  \item \textbf{Automatic compaction} — when token threshold exceeded, conversation is summarized and replaced with a compressed representation, preserving the model's latent understanding via encrypted content
-\end{itemize}
+\end{block}
 \end{column}
-\begin{column}{0.44\textwidth}
-\begin{tikzpicture}[
-  box/.style={draw, rounded corners=3pt, fill=blue!10,
-              minimum width=2.8cm, minimum height=0.55cm,
-              align=center, font=\scriptsize},
-  every node/.style={font=\scriptsize}
-]
-  \node[box, fill=gray!12]   (t1) at (0, 4.2) {Turn 1: prompt};
-  \node[box, fill=blue!10]   (i1) at (0, 3.5) {Inference + tool calls};
-  \node[box, fill=green!12]  (a1) at (0, 2.8) {Assistant message $\to$ end turn};
-
-  \node[box, fill=gray!20]   (t2) at (0, 2.0) {Turn 2: prompt\\(Turn 1 + new msg)};
-  \node[box, fill=blue!10]   (i2) at (0, 1.2) {Inference + tool calls};
-  \node[box, fill=green!12]  (a2) at (0, 0.5) {Assistant message $\to$ end turn};
-
-  \node[box, fill=orange!20] (cp) at (0,-0.3) {Compaction\\(if threshold exceeded)};
-
-  \draw[-{Stealth}] (t1) -- (i1);
-  \draw[-{Stealth}] (i1) -- (a1);
-  \draw[-{Stealth}] (a1) -- (t2);
-  \draw[-{Stealth}] (t2) -- (i2);
-  \draw[-{Stealth}] (i2) -- (a2);
-  \draw[-{Stealth}, dashed] (a2) -- (cp);
-
-  % Growing arrow
-  \draw[{Stealth}-, thick, blue!40] (-1.7, 4.4) -- (-1.7, -0.0)
-    node[midway, left, font=\scriptsize, blue!60] {\shortstack{growing\\prompt}};
-\end{tikzpicture}
+\begin{column}{0.48\textwidth}
+\begin{block}{Case 2 — Runtime Agentic Execution}
+\begin{itemize}
+  \item Plan remains high-level
+  \item Environment is dynamic / non-stationary
+  \item System must adapt step by step
+  \item Output: ongoing reasoning + actions
+  \item Use a long-running autonomous agent (can use the coding agent as a tool)
+\end{itemize}
+\end{block}
 \end{column}
 \end{columns}
-% Speaker notes:
-% Connect to Appendix B failure mode "excessive cost / latency" — now students see the mechanism.
-% The MCP tool reordering bug is a perfect real example of how implementation details
-% have direct cost impact in production.
-% Key lesson: the agent loop is not just about reasoning — it is about context budget management.
+\vspace{0.5em}
+
 \end{frame}

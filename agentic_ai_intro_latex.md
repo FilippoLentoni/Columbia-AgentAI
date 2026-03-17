@@ -1,3 +1,10 @@
+#missing 
+1/ prompt caching
+2/ context engineering: https://anthropic.skilljar.com/claude-code-in-action
+3/ prompt injection
+
+
+
 \documentclass[9pt]{beamer}
 
 \usetheme{Madrid}

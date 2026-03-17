@@ -1,47 +1,123 @@
 % =======================
-% Section 3: Ecosystem
+% Section 3: Agent Patterns
 % =======================
-\section{Ecosystem}
+\section{Agent Patterns}
 
-% ---- Slide 11: Ecosystem Overview ----
-\begin{frame}{Ecosystem Overview}
-Raw LLM APIs are stateless and have no orchestration — the ecosystem exists to solve that:
-\vspace{0.4em}
+% ---- Slide: ReAct Framework ----
+\begin{frame}{ReAct Framework}
 \begin{columns}[T]
-\begin{column}{0.48\textwidth}
-\begin{block}{Interoperability}
-\begin{itemize}
-  \item \textbf{MCP} (Model Context Protocol) — open standard for tool discovery and invocation; tools built once work across any MCP-compatible agent or framework
+\begin{column}{0.52\textwidth}
+\textbf{ReAct} (Reasoning + Acting)
+\begin{itemize}\setlength\itemsep{0.2em}
+  \item The canonical single-agent execution pattern
+  \item Alternates between:
+  \begin{itemize}
+    \item \textbf{Thought} --- reason about the next step
+    \item \textbf{Act} --- invoke a tool or take an action
+    \item \textbf{Observe} --- receive result, update beliefs with real-world feedback
+    \item \textbf{Repeat} until goal is reached
+  \end{itemize}
+  \item The \textbf{Observe} step is what a static LLM cannot do --- grounding in real-world feedback
+  \item ReAct is a \emph{canonical reference pattern}, not the only architecture (see also: ReWOO, LATS, Reflexion)
 \end{itemize}
-\end{block}
+\end{column}
+\begin{column}{0.44\textwidth}
+\centering
+\begin{tikzpicture}[
+  node distance=0.7cm,
+  stepnode/.style={draw, circle, fill=blue!12, minimum size=1.1cm,
+               align=center, font=\small},
+  every node/.style={font=\small}
+]
+  \node[stepnode] (goal)   at (0, 3.2) {\textbf{Goal}};
+  \node[stepnode, fill=orange!20] (thought) at (0, 2.2) {Thought};
+  \node[stepnode, fill=green!15]  (act)     at (0, 1.2) {Act};
+  \node[stepnode, fill=yellow!20] (obs)     at (0, 0.2) {Observe};
+  \node[draw, rounded corners=3pt, fill=red!10,
+        minimum width=1.8cm, minimum height=0.55cm,
+        font=\small] (stop) at (0,-0.65) {Done};
+
+  \draw[-{Stealth}] (goal)   -- (thought);
+  \draw[-{Stealth}] (thought) -- (act);
+  \draw[-{Stealth}] (act)    -- (obs);
+  \draw[-{Stealth}, dashed]  (obs) -- node[right, font=\scriptsize]{or loop} (stop);
+  \draw[-{Stealth}] (obs.east) to[out=0,in=0,looseness=2.2] (thought.east);
+\end{tikzpicture}
 \vspace{0.3em}
-\begin{block}{Orchestration}
+
+\scriptsize Other patterns: \textbf{ReWOO} (plan ahead, no observation loop), \textbf{Reflexion} (self-reflection on errors), \textbf{LATS} (tree search + self-reflection)
+\end{column}
+\end{columns}
+\end{frame}
+
+
+% ---- Slide: Orchestration Architecture ----
+\begin{frame}{Orchestration: Single-Agent vs.\ Multi-Agent}
+\begin{columns}[T]
+\begin{column}{0.50\textwidth}
+\textbf{Orchestration architecture} is a \emph{structural} decision:\\
+how many agents, what roles, how they coordinate.\\[0.5em]
+
+\begin{block}{Multi-Agent System}
 \begin{itemize}
-  \item \textbf{LangChain / LangGraph} — application abstractions for single-agent flows; LangGraph adds stateful, graph-based multi-step orchestration
-  \item \textbf{CrewAI} — multi-agent role-based orchestration and collaboration
+  \item \textbf{Orchestrator agent}: decomposes the goal, delegates to subagents, synthesizes results
+  \item \textbf{Subagents}: specialized, each running its own internal loop
+  \item Enables parallelism and role separation
+  \item Overhead: coordination, communication, trust between agents
 \end{itemize}
 \end{block}
 \end{column}
+\begin{column}{0.46\textwidth}
+\begin{tikzpicture}[
+  box/.style={draw, rounded corners=3pt, minimum width=2.8cm,
+              minimum height=0.6cm, align=center, font=\small},
+  sbox/.style={draw, rounded corners=3pt, minimum width=2.0cm,
+               minimum height=0.55cm, align=center, font=\scriptsize},
+  every node/.style={font=\small}
+]
+
+  % Multi-agent
+  \node[box, fill=red!10] (orch) at (0, 2.3) {Orchestrator Agent};
+  \node[sbox, fill=orange!15] (rl0) at (0, 1.55) {ReAct loop};
+  \draw[-{Stealth}] (orch) -- (rl0);
+
+  \node[sbox, fill=green!15] (s1) at (-1.1, 0.6) {Subagent A};
+  \node[sbox, fill=green!15] (s2) at ( 1.1, 0.6) {Subagent B};
+  \draw[-{Stealth}] (rl0) -- (s1);
+  \draw[-{Stealth}] (rl0) -- (s2);
+
+  \node[sbox, fill=orange!15, minimum width=1.3cm] (rl2) at (-1.1,-0.15) {\scriptsize ReAct};
+  \node[sbox, fill=orange!15, minimum width=1.3cm] (rl3) at ( 1.1,-0.15) {\scriptsize ReAct};
+  \draw[-{Stealth}] (s1) -- (rl2);
+  \draw[-{Stealth}] (s2) -- (rl3);
+
+  \node[font=\scriptsize\bfseries] at (0, 2.7) {Multi-agent};
+\end{tikzpicture}
+\end{column}
+\end{columns}
+
+\end{frame}
+
+% ---- Slide: Coding Agent & Long-Horizon Agent ----
+\begin{frame}{Coding Agent \& Long-Horizon Autonomous Agent}
+\begin{columns}[T]
 \begin{column}{0.48\textwidth}
-\begin{block}{Development SDK}
-\begin{itemize}
-  \item \textbf{Strands Agents} — model-first agent development; keeps the agent loop explicit and close to the developer
-\end{itemize}
-\end{block}
+\begin{block}{Codex (OpenAI), Claude Code(Anthropic)}
+\centering
+\includegraphics[width=\textwidth]{images/Coding Agent.png}
 \vspace{0.3em}
-\begin{block}{Production Runtime}
-\begin{itemize}
-  \item \textbf{AgentCore} — secure runtime, memory management, tool gateway, and production operations; the deployment layer for cloud-hosted agents
-\end{itemize}
+
+\scriptsize\url{https://openai.com/index/unrolling-the-codex-agent-loop/}
+\end{block}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{block}{OpenClaw}
+\centering
+\includegraphics[width=\textwidth]{images/OpenClaw.png}
+\vspace{0.3em}
+
+\scriptsize\url{https://openclaw.ai}
 \end{block}
 \end{column}
 \end{columns}
-\vspace{0.3em}
-\small \textit{MCP sits orthogonally to orchestration frameworks — it is the connective tissue, not a competing tool. Reach for each layer when its problem arises, not before.}
-% Speaker notes:
-% MCP → when tools need to be portable across agents or frameworks
-% LangChain/LangGraph → when you need single/multi-step orchestration
-% CrewAI → when you need multiple specialized agents collaborating
-% Strands → when you want to stay close to the model and keep the loop explicit
-% AgentCore → when you need to deploy, govern, and operate in production on AWS
 \end{frame}
