@@ -4,13 +4,16 @@
 \section{Anatomy of an Agent}
 
 % ---- Slide: Anatomy of an Agent — Overview ----
-\begin{frame}[t]{Anatomy of an Agent}
+\begin{frame}{Anatomy of an Agent}
+
+\vfill
 \begin{itemize}\setlength\itemsep{0.4em}
-  \item \textbf{Cognitive Layer} --- foundation model, reasoning, planning
-  \item \textbf{Action Layer} --- tools, RAG, skills
-  \item \textbf{Memory Layer} --- working, session, long-term
-  \item \textbf{Safety Layer} --- guardrails, permissions, approval gates
+  \item \textbf{Cognitive Layer}
+  \item \textbf{Action Layer}
+  \item \textbf{Memory Layer}
+  \item \textbf{Safety Layer}
 \end{itemize}
+\vfill
 
 \end{frame}
 
@@ -54,7 +57,7 @@ Source: Anthropic, \textit{Effective context engineering for AI agents} \\
 % ---- Slide: RAG — Two-Phase Pipeline ----
 \begin{frame}{RAG: Retrieval-Augmented Generation - Tool}
 \textbf{Goal}: ground model outputs in external knowledge beyond the training cutoff\\[0.4em]
-RAG operates in \textbf{two distinct phases} with different parameters and different failure modes:
+
 \vspace{0.4em}
 \begin{columns}[T]
 \begin{column}{0.48\textwidth}
@@ -73,17 +76,15 @@ RAG operates in \textbf{two distinct phases} with different parameters and diffe
 \begin{block}{Phase 2 — Online: Retrieval \& Generation}
 \begin{enumerate}
   \item Embed user query
-  \item Retrieve top-$k$ chunks \textit{(k, threshold, reranking)}
-  \item Filter by metadata if needed
+  \item Retrieve top-$k$ chunks 
   \item Inject context into prompt
-  \item Generate grounded answer \textit{(system prompt, model)}
+  \item Generate grounded answer 
 \end{enumerate}
 \end{block}
 \end{column}
 \end{columns}
 \vspace{0.4em}
-\small \textit{RAG is not one pipeline — it is two pipelines with different owners, timelines, and tuning levers.\\
-RAG alone is insufficient when knowledge must be synthesized across many documents or acted upon — that is where agents come in.}
+
 \end{frame}
 
 % ---- Slide: RAG Parameters ----
@@ -102,9 +103,7 @@ RAG alone is insufficient when knowledge must be synthesized across many documen
 \midrule
 \multirow{5}{*}{\textbf{Online}}
   & Number of results & Chunks returned per search (top-$k$)              & 5 \\
-  & Distance metric   & How vectors are compared                          & Cosine \\
-  & Reranking         & Cross-encoder rescoring of top-$k$ results        & None \\
-  & Metadata filters  & Narrowing search by document or category          & None \\
+  & Distance metric   & How vectors are compared                          & Cosine \\  
   & Query formulation & How search queries are constructed                & Model-driven \\
 \midrule
 \multirow{2}{*}{\textbf{Generation}}
@@ -114,7 +113,7 @@ RAG alone is insufficient when knowledge must be synthesized across many documen
 \end{tabular}
 \vspace{0.3em}
 
-\small \textit{There is no universally correct configuration --- parameter choices depend on domain, document type, and task.}
+
 \end{frame}
 
 % ---- Slide: Memory Layer ----

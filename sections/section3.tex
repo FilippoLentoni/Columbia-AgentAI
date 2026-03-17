@@ -13,12 +13,11 @@
   \item Alternates between:
   \begin{itemize}
     \item \textbf{Thought} --- reason about the next step
-    \item \textbf{Act} --- invoke a tool or take an action
+    \item \textbf{Act} --- take an action
     \item \textbf{Observe} --- receive result, update beliefs with real-world feedback
     \item \textbf{Repeat} until goal is reached
   \end{itemize}
-  \item The \textbf{Observe} step is what a static LLM cannot do --- grounding in real-world feedback
-  \item ReAct is a \emph{canonical reference pattern}, not the only architecture (see also: ReWOO, LATS, Reflexion)
+  \item The \textbf{Observe} step is what a static LLM cannot do - grounding in real-world feedback
 \end{itemize}
 \end{column}
 \begin{column}{0.44\textwidth}
@@ -55,8 +54,6 @@
 \begin{frame}{Orchestration: Single-Agent vs.\ Multi-Agent}
 \begin{columns}[T]
 \begin{column}{0.50\textwidth}
-\textbf{Orchestration architecture} is a \emph{structural} decision:\\
-how many agents, what roles, how they coordinate.\\[0.5em]
 
 \begin{block}{Multi-Agent System}
 \begin{itemize}
@@ -98,26 +95,3 @@ how many agents, what roles, how they coordinate.\\[0.5em]
 
 \end{frame}
 
-% ---- Slide: Coding Agent & Long-Horizon Agent ----
-\begin{frame}{Coding Agent \& Long-Horizon Autonomous Agent}
-\begin{columns}[T]
-\begin{column}{0.48\textwidth}
-\begin{block}{Codex (OpenAI), Claude Code(Anthropic)}
-\centering
-\includegraphics[width=\textwidth]{images/Coding Agent.png}
-\vspace{0.3em}
-
-\scriptsize\url{https://openai.com/index/unrolling-the-codex-agent-loop/}
-\end{block}
-\end{column}
-\begin{column}{0.48\textwidth}
-\begin{block}{OpenClaw}
-\centering
-\includegraphics[width=\textwidth]{images/OpenClaw.png}
-\vspace{0.3em}
-
-\scriptsize\url{https://openclaw.ai}
-\end{block}
-\end{column}
-\end{columns}
-\end{frame}
