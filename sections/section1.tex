@@ -23,13 +23,17 @@
   \item No persistent memory across sessions
   \item Single-pass generation
 \end{itemize}
+
 \vspace{0.4em}
-\textbf{Real tasks require more:}
-\begin{itemize}
-  \item External, up-to-date knowledge
-  \item Tool use and environment interaction
-  \item Memory
-  \item The ability to generate and iterate over a plan and self-correct during the execution
-\end{itemize}
+\begin{block}{Definition}
+An \textbf{agent} is a software program capable of interacting with its environment and performing tasks to meet a goal. Agents have the ability to:
+\begin{enumerate}
+  \item Understand a user request in natural language
+  \item Generate a plan
+  \item Identify the required resources (APIs, data, tools, \ldots)
+  \item Execute the plan
+  \item Overcome obstacles by retrying the process
+\end{enumerate}
+\end{block}
 
 \end{frame}

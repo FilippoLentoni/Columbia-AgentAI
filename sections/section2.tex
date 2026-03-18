@@ -48,14 +48,13 @@ Source: Anthropic, \textit{Effective context engineering for AI agents} \\
 \textbf{Action Layer}
 \begin{itemize}\setlength\itemsep{0.1em}
   \item \textbf{Tools}: discrete callable capabilities that let the agent interact with the world through MCP
-  \item \textbf{RAG}: a tool pattern for retrieving external knowledge at runtime
   \item \textbf{Skills}: reusable pre-written procedures for recurring subtasks
 \end{itemize}
 
 \end{frame}
 
 % ---- Slide: RAG — Two-Phase Pipeline ----
-\begin{frame}{RAG: Retrieval-Augmented Generation - Tool}
+\begin{frame}{Tool Example - RAG: Retrieval-Augmented Generation}
 \textbf{Goal}: ground model outputs in external knowledge beyond the training cutoff\\[0.4em]
 
 \vspace{0.4em}
@@ -88,7 +87,7 @@ Source: Anthropic, \textit{Effective context engineering for AI agents} \\
 \end{frame}
 
 % ---- Slide: RAG Parameters ----
-\begin{frame}{RAG Parameters}
+\begin{frame}{Tool Example - RAG: Parameters}
 \scriptsize
 \centering
 \begin{tabular}{llp{5.0cm}l}
@@ -119,13 +118,28 @@ Source: Anthropic, \textit{Effective context engineering for AI agents} \\
 % ---- Slide: Memory Layer ----
 \begin{frame}{Memory Layer}
 
-\textbf{Memory Layer}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\textbf{Short-Term Memory}
 \begin{itemize}\setlength\itemsep{0.1em}
-  \item \textbf{Working memory}: what is currently in the context window
-  \item \textbf{Session memory}: state accumulated during the current interaction
-  \item \textbf{Long-term memory}: information retained across sessions
+  \item \textbf{Working memory}: what is currently in the context window (current prompt + retrieved context)
+  \item \textbf{Session memory}: state accumulated during the current interaction; provides continuity within a single conversation
 \end{itemize}
-\vspace{0.3em}
+\end{column}
+\begin{column}{0.48\textwidth}
+\textbf{Long-Term Memory}\\[0.3em]
+Persistent information extracted and stored \textbf{across multiple conversations}:
+\begin{itemize}\setlength\itemsep{0.1em}
+  \item \textbf{User preferences}: learned behavioral patterns, communication styles, and individual preferences
+  \item \textbf{Semantic/factual}: facts, order details, prior decisions, and conversation summaries
+\end{itemize}
+\end{column}
+\end{columns}
+
+\vspace{0.5em}
+\begin{block}{Why Memory Matters}
+Without memory every conversation starts from zero --- customers repeat themselves, context is lost, and personalization is impossible. Memory enables agents to \textbf{recognize returning users}, \textbf{recall preferences automatically}, and \textbf{connect related conversations} over time.
+\end{block}
 \end{frame}
 
 
