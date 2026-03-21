@@ -6,9 +6,11 @@
 % ---- Slide: Strategy Creation, Strategy Execution ----
 \begin{frame}{When to use Agents: Strategy Creation - Chatbot Like Experience}
 
-Given a problem, agents are used to \textbf{create or refine a plan/strategy} when the solution path is uncertain and it requires skills/knowledge tools we do not have, or the knowledge is spread across different data sources and data types. The agent can navigate the information available, spread across different data sources and types, and leverage the FM to connect the docs and answer the user query.
+Agents are valuable when the path to a solution is uncertain and the required knowledge or capabilities are distributed across tools, documents, databases, and other data types. In these settings, the agent can search across sources, use external capabilities, logically connect relevant information using FM reasoning, and iteratively build or refine a plan to address the user's goal.
+An agentic chatbot allows users to go beyond their own expertise. For example, it can help by translating content across languages or formats, exploring unfamiliar domains and surfacing relevant context, solving problems outside the user's immediate know-how.
 
-\newline
+\vspace{0.6em}
+
 Example of application:
 
 \begin{enumerate}
@@ -30,7 +32,7 @@ After planning, execution can follow different paths:
 \vspace{0.4em}
 \begin{columns}[T]
 \begin{column}{0.48\textwidth}
-\begin{block}{Case 1 — Deterministic Execution}
+\begin{block}{Case 1 --- Deterministic Execution}
 \begin{itemize}
   \item Plan is well specified
   \item Environment is stable
@@ -41,7 +43,7 @@ After planning, execution can follow different paths:
 \end{block}
 \end{column}
 \begin{column}{0.48\textwidth}
-\begin{block}{Case 2 — Runtime Agentic Execution}
+\begin{block}{Case 2 --- Runtime Agentic Execution}
 \begin{itemize}
   \item Plan remains high-level
   \item Environment is dynamic / non-stationary
@@ -53,7 +55,6 @@ After planning, execution can follow different paths:
 \end{column}
 \end{columns}
 \vspace{0.5em}
-
 \end{frame}
 
 % ---- Slide: Coding Agent & Long-Horizon Agent ----
