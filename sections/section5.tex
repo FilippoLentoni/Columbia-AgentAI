@@ -28,8 +28,8 @@ An agentic chatbot can \textbf{democratize access} to these systems by allowing 
 
 The assistant can answer questions such as:
 \begin{itemize}
-  \item Which products were \textbf{misclassified} based on the latest audit?
-  \item Based on the model behavior and training data, what are your \textbf{recommendations to improve the classifier}?
+  \item Which nodes are at highest stockout risk this week?
+  \item Based on the model behavior and training data and audit, what are your \textbf{recommendations to improve the classifier}?
   \item If I change the optimization inputs, how will the \textbf{truck allocation} change?
   \item Can you run a \textbf{what-if analysis} with different capacity, demand, or cost assumptions?
   \item Can you trigger \textbf{retraining and redeployment} of the ML model under approval?
@@ -132,7 +132,7 @@ An always-on, self-evolving, long-running autonomous agent continuously \textbf{
 \textbf{Example instruction to an autonomous agent:}
 \begin{quote}
 \small
-``Hi Agent, you own the supply-chain processes from now on. Maintain and improve the current state of the systems, keep them up to date as the world evolves, review the scientific literature, run experiments to improve performance, interact with senior domain experts and operations teams in the physical world, incorporate new business initiatives into our models and systems, and proactively identify opportunities for expansion. You are equipped with tools and a coding agent: you may use existing tools, update them, or build new ones when needed. You may also coordinate with other agents or teams as part of the workflow. Take decisions under uncertainty within guardrails and permission policies''
+``Hi Agent, you own the supply-chain processes from now on. Maintain and improve the current state of the systems, keep them up to date as the world evolves, review the scientific literature, run experiments to improve performance, interact with senior domain experts and operations teams in the physical world, incorporate new business initiatives into our models and systems, and proactively identify opportunities for expansion. You are equipped with tools and a coding agent: you may use existing tools, update them, or build new ones when needed. You may also coordinate with other agents or teams as part of the workflow. Make decisions under uncertainty within guardrails and permission policies''
 \end{quote}
 
 \vspace{0.4em}
@@ -220,6 +220,37 @@ An always-on, self-evolving, long-running autonomous agent continuously \textbf{
   \node[align=center, font=\tiny, text=gray] at (0, -4.1) {Inspired by recent work on long-running, self-evolving agents, secure agent runtimes, skills, and shell-based execution.};
 
 \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Always-On Autonomous Agents}
+\small
+
+\begin{block}{Shift in Capability}
+AI has evolved from assistants following your directions to agents that act independently. Called claws, these agents can take a goal, figure out how to achieve it, and execute indefinitely, while leaving you out of the loop.
+\end{block}
+
+\vspace{0.3em}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{images/claws_1.png}
+
+\vspace{0.25em}
+\scriptsize
+Source: OpenAI developer blog, \textit{Skills, shell tips, always-on autonomous agents} \\
+\url{https://developers.openai.com/blog/skills-shell-tips}
+\end{column}
+\begin{column}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{images/Long_running_agents.png}
+
+\vspace{0.25em}
+\scriptsize
+Source: NVIDIA OpenShell \\
+\url{https://developer.nvidia.com/blog/run-autonomous-self-evolving-agents-more-safely-with-nvidia-openshell/}
+\end{column}
+\end{columns}
+
 \end{frame}
 
 

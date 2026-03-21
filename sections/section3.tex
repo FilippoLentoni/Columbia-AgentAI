@@ -8,17 +8,15 @@
 \begin{columns}[T]
 \begin{column}{0.52\textwidth}
 \textbf{ReAct} (Reasoning + Acting)
-\begin{itemize}\setlength\itemsep{0.2em}
-  \item The canonical single-agent execution pattern
+
+\begin{itemize}
   \item Alternates between:
-  \begin{itemize}
-    \item \textbf{Reasoning} --- reason about the next step
-    \item \textbf{Act} --- take an action
-    \item \textbf{Observe} --- receive result, update beliefs with real-world feedback
-    \item \textbf{Repeat} until goal is reached
-  \end{itemize}
-  \item The \textbf{Observe} step is what a static LLM cannot do - grounding in real-world feedback
+  \item \textbf{Reasoning} --- reason about the next step
+  \item \textbf{Act} --- take an action
+  \item \textbf{Observe} --- receive result, update beliefs with real-world feedback
+  \item \textbf{Repeat} until the goal is reached
 \end{itemize}
+
 \end{column}
 \begin{column}{0.44\textwidth}
 \centering
@@ -39,8 +37,8 @@
 \begin{itemize}
   \item \textbf{Orchestrator agent}: decomposes the goal, delegates to subagents, synthesizes results
   \item \textbf{Subagents}: specialized, each running its own internal loop
-  \item Enables parallelism and role separation
-  \item Overhead: coordination, communication, trust between agents
+  \item Enables parallelism and role separation, cost optimization
+  \item Overhead: coordination, communication, complexity
 \end{itemize}
 \end{block}
 \end{column}

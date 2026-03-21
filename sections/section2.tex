@@ -26,7 +26,7 @@
 \textbf{Cognitive Layer}
 \begin{itemize}\setlength\itemsep{0.1em}
   \item \textbf{Foundation model}: reasoning, planning, tool selection
-  \item \textbf{system prompt}: Prompt engineering and Context engineering
+  \item \textbf{System prompt}: prompt engineering and context engineering
 \end{itemize}
 \end{column}
 \begin{column}{0.48\textwidth}
@@ -85,7 +85,6 @@ A tool is a single callable capability; a skill is a reusable workflow that comb
   \item Store in vector index \textit{(distance metric)}
 \end{enumerate}
 \vspace{0.2em}
-\scriptsize Decisions made \emph{once}. Heavily influence downstream retrieval quality.
 \end{block}
 \end{column}
 \begin{column}{0.48\textwidth}
@@ -138,24 +137,23 @@ A tool is a single callable capability; a skill is a reusable workflow that comb
 \begin{columns}[T]
 \begin{column}{0.48\textwidth}
 \textbf{Short-Term Memory}
-\begin{itemize}\setlength\itemsep{0.1em}
-  \item \textbf{Working memory}: what is currently in the context window (current prompt + retrieved context)
-  \item \textbf{Session memory}: state accumulated during the current interaction; provides continuity within a single conversation
-\end{itemize}
+Short-term memory captures turn-by-turn interactions within a single session. This lets agents maintain immediate context without requiring users to repeat information.
+
+\vspace{0.3em}
+\textit{Example:} If a user asks, ``What's the weather like in Seattle?'' and then follows up with ``What about tomorrow?'', the agent uses the recent conversation history to understand that ``tomorrow'' still refers to Seattle.
 \end{column}
 \begin{column}{0.48\textwidth}
 \textbf{Long-Term Memory}\\[0.3em]
-Persistent information extracted and stored \textbf{across multiple conversations}:
-\begin{itemize}\setlength\itemsep{0.1em}
-  \item \textbf{User preferences}: learned behavioral patterns, communication styles, and individual preferences
-  \item \textbf{Semantic/factual}: facts, order details, prior decisions, and conversation summaries
-\end{itemize}
+Long-term memory automatically extracts and stores key insights across multiple sessions, including user preferences, important facts, and session summaries.
+
+\vspace{0.3em}
+\textit{Example:} If a customer mentions they prefer window seats during flight booking, the agent stores that preference. In future interactions, it can proactively offer window seats and create a more personalized experience.
 \end{column}
 \end{columns}
 
 \vspace{0.5em}
 \begin{block}{Why Memory Matters}
-Without memory every conversation starts from zero --- customers repeat themselves, context is lost, and personalization is impossible. Memory enables agents to \textbf{recognize returning users}, \textbf{recall preferences automatically}, and \textbf{connect related conversations} over time.
+Without memory, every conversation starts from zero - customers repeat themselves, context is lost, and personalization is impossible. Memory enables agents to \textbf{recognize returning users}, \textbf{recall preferences automatically}, and \textbf{connect related conversations} over time.
 \end{block}
 \end{frame}
 

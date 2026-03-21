@@ -4,21 +4,20 @@
 \section{When to Use Agentic AI}
 
 % ---- Slide: Strategy Creation, Strategy Execution ----
-\begin{frame}{When to use Agents: Strategy Creation - Chatbot Like Experience}
+\begin{frame}{When to Use Agents: Strategy Creation - Chatbot-Like Experience}
 
 Agents are valuable when the path to a solution is uncertain and the required knowledge or capabilities are distributed across tools, documents, databases, and other data types. In these settings, the agent can search across sources, use external capabilities, logically connect relevant information using FM reasoning, and iteratively build or refine a plan to address the user's goal.
-An agentic chatbot allows users to go beyond their own expertise. For example, it can help by translating content across languages or formats, exploring unfamiliar domains and surfacing relevant context, solving problems outside the user's immediate know-how.
+An agentic chatbot allows users to go beyond their own expertise. For example, it can help by translating content across languages or formats, exploring unfamiliar domains, surfacing relevant context, and solving problems outside the user's immediate know-how.
 
 \vspace{0.6em}
 
-Example of application:
+Examples of applications:
 
 \begin{enumerate}
   \item Enterprise Knowledge Assistant
-  \item Regulatory Compliance BOTS
   \item Customer Support copilots
   \item Developer Documentation Agents
-  \item Data analyst Agents
+  \item Data Analyst Agents
 \end{enumerate}
 \end{frame}
 
@@ -34,10 +33,10 @@ After planning, execution can follow different paths:
 \begin{column}{0.48\textwidth}
 \begin{block}{Case 1 --- Deterministic Execution}
 \begin{itemize}
-  \item Plan is well specified
+  \item Plan is well-specified
   \item Environment is stable
   \item Limited unforeseen events
-  \item Output: scripts, workflows, decision trees
+  \item Automation through scripts, workflows, decision trees
   \item Use the coding agent to automate the workflow
 \end{itemize}
 \end{block}
@@ -48,7 +47,6 @@ After planning, execution can follow different paths:
   \item Plan remains high-level
   \item Environment is dynamic / non-stationary
   \item System must adapt step by step
-  \item Output: ongoing reasoning + actions
   \item Use a long-running autonomous agent (can use the coding agent as a tool)
 \end{itemize}
 \end{block}
@@ -61,7 +59,7 @@ After planning, execution can follow different paths:
 \begin{frame}{Coding Agent \& Long-Horizon Autonomous Agent}
 \begin{columns}[T]
 \begin{column}{0.48\textwidth}
-\begin{block}{Codex (OpenAI), Claude Code(Anthropic)}
+\begin{block}{Codex (OpenAI), Claude Code (Anthropic)}
 \centering
 \includegraphics[width=\textwidth]{images/Coding Agent.png}
 \vspace{0.3em}
