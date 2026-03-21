@@ -84,13 +84,13 @@ The value is not only faster and easier access to model outputs; it is the abili
   lbl/.style={font=\tiny, text=gray}
 ]
 
-  \node[usr] (planner) at (-4.7, 2.0) {Planner};
+  \node[usr] (User) at (-4.7, 2.0) {User};
 
-  \node[agent] (agent) at (-0.8, 2.0) {Supply Chain\\Chatbot Assistant};
+  \node[agent] (agent) at (-0.8, 2.0) {Agentic \\Chatbot Assistant};
 
-  \draw[arr] (planner) -- (agent)
+  \draw[arr] (User) -- (agent)
     node[midway, above, font=\tiny] {natural language query};
-  \draw[arr, dashed] (agent) -- (planner)
+  \draw[arr, dashed] (agent) -- (User)
     node[midway, below, font=\tiny] {answer / recommendation};
 
   \node[tool] (sqltool) at (-3.4, 0.0) {SQL / Metrics Tool};
@@ -125,7 +125,7 @@ The value is not only faster and easier access to model outputs; it is the abili
 
 \begin{block}{From user-driven interaction to persistent ownership}
 The chatbot assists a human when asked.  
-An always-on, self-evolving, long-running autonomous agent continuously \textbf{monitors}, \textbf{improves}, and \textbf{maintains} supply chain systems over time.
+An always-on, self-evolving, long-running autonomous agent continuously \textbf{monitors}, \textbf{improves}, and \textbf{maintains} the systems over time.
 \end{block}
 
 \vspace{0.4em}
@@ -165,7 +165,7 @@ An always-on, self-evolving, long-running autonomous agent continuously \textbf{
 ]
 
   % Center
-  \node[agent] (agent) at (0, 1.6) {Always-On Autonomous\\Supply Chain Agent};
+  \node[agent] (agent) at (0, 1.6) {Always-On Autonomous\\ Agent};
 
   % Top
   \node[human] (leadership) at (0, 3.7) {
